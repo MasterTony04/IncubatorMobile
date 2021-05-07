@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:incubator_iot/landingPage.dart';
+import 'package:incubator_iot/modules/main/landingPage.dart';
+import 'package:parse_server_sdk_flutter/parse_server_sdk.dart';
+import 'package:toast/toast.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -7,11 +9,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController usernameController = new TextEditingController();
+  TextEditingController passwordController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: Center(
         child: ListView(
           shrinkWrap: true,
@@ -32,6 +36,7 @@ class _LoginPageState extends State<LoginPage> {
                 //padding: const EdgeInsets.only(left:15.0,right: 15.0,top:0,bottom: 0),
                 padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
+                  controller: usernameController,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Email',
@@ -45,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                     left: 15.0, right: 15.0, top: 15, bottom: 0),
                 //padding: EdgeInsets.symmetric(horizontal: 15),
                 child: TextField(
-
+                  controller: passwordController,
                   obscureText: true,
                   decoration: InputDecoration(
                       border: OutlineInputBorder(),
@@ -56,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
             ),
             Center(
               child: FlatButton(
-                onPressed: (){
+                onPressed: () {
                   //TODO FORGOT PASSWORD SCREEN GOES HERE
                 },
                 child: Text(
@@ -70,17 +75,16 @@ class _LoginPageState extends State<LoginPage> {
                 height: 50,
                 width: 250,
                 decoration: BoxDecoration(
-                    color: Color(0xff6aa84f), borderRadius: BorderRadius.circular(20)),
+                    color: Color(0xff6aa84f),
+                    borderRadius: BorderRadius.circular(20)),
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pushReplacement(
-                        context, MaterialPageRoute(builder: (_) => LandingPage()));
+                    login();
                   },
                   child: Text(
                     'Login',
                     style: TextStyle(color: Colors.white, fontSize: 25),
                   ),
-
                 ),
               ),
             ),
@@ -92,5 +96,19 @@ class _LoginPageState extends State<LoginPage> {
         ),
       ),
     );
+  }
+
+  void login() async {
+    String username = usernameController.text;
+    String password = usernameController.text;
+
+    ParseResponse res = await ParseUser(username, password, '').login();
+    if (res.success) {
+      Toast.show('Welcome', context, duration: 4);
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (_) => LandingPage()));
+    } else {
+      Toast.show(res.error.message, context, duration: 4);
+    }
   }
 }
