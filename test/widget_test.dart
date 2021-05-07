@@ -7,8 +7,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-
-import 'package:incubator_iot/main.dart';
 import 'package:incubator_iot/modules/main/landingPage.dart';
 
 void main() {

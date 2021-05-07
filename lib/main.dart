@@ -8,9 +8,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   initServer().then((value) => runApp(MultiProvider(
         providers: [
-          Provider<IncubatorState>(
-            create: (_) => IncubatorState(),
-          ),
+          ChangeNotifierProvider(create: (_)=>IncubatorState())
         ],
         child: MaterialApp(
           theme: ThemeData(
